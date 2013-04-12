@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Beautiful Unique Snowflake</title>
+        <meta name="description" content="A listing of beautiful unique snowflakes, aka web projects.">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+
+        	/* helper styles */
+
+			.visually-hidden {
+			    position: absolute !important;
+			    clip: rect(1px 1px 1px 1px);
+			    clip: rect(1px,1px,1px,1px);
+			    padding: 0 !important;
+			    border: 0 !important;
+			    height: 1px !important;
+			    width: 1px !important;
+			    overflow: hidden;
+			}
+
+			/* /helper styles */
+
+			/* page styles */
+
+			body {
+				display: inline-block;
+				font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+			}
+
+			a {
+				text-decoration: none;
+			}
+
+			a:hover {
+				text-decoration: underline;
+			}
+
+			h1 {
+				margin-top: 0;
+			}
+
+			table {
+				width: 100%;
+				text-align: left;
+				font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+			}
+
+			table a {
+				text-decoration: underline;
+			}
+
+			thead .name,
+			.name > a {
+				text-indent: 25px;
+			}
+
+			.name > a {
+				display: inline-block;
+				min-height: 30px;
+				background-position: 0 50%;
+				background-repeat: no-repeat;
+				background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASBAMAAACp/uMjAAAAElBMVEX/////zJnM//+ZZjMzMzMAAADCEvqoAAAATElEQVQI12NgCAUCBjBgFQSCADAzEMQUDQ0F8oJBTEMgDyhqDARAnnAARAEQGLvCmcKuVBYVhgJXBlZjCDBxZWAIcYGAEKCDQyHAAQCmlhkxyOWGaQAAAABJRU5ErkJggg==);
+			}
+
+			.name > a.file {
+				background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAWCAIAAABCPVsWAAAAkklEQVQ4y9WTyw3EIAxE42g78tQENUFNpqbNwRHLP+ayUuaABHh42Bhi5sMgEanmzPxdSgOasPOwSUQA5KnV1jg3bKXzZ6NOup5SAkBEOmrkc0mG2E9Ja/bUo2OMMa97788yaMFxzo3fbV2MfFYIobrko9OaW5/nwPYK2ho7pW1h/0vb+zgVDUDbcnPdPW1pyF4XfBqvBmHmK4kAAAAASUVORK5CYII=);
+			}
+
+			.name > a > span {
+				position: relative;
+				top: 6px;
+			}
+
+			footer {
+				font-style: italic;
+				font-size: smaller;
+			}
+
+			ul {
+				margin: 0;
+				padding: 0;
+				list-style-type: none;
+			}
+
+			li {
+				display: inline;
+			}
+
+			li:before {
+				content: " / ";
+			}
+
+			li:first-child:before {
+				content: normal;
+			}
+
+			/* /page styles */
+
+        </style>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="assets/js/plugins/jquery-1.8.3.min.js"><\/script>')</script>
+
+        <script>
+
+			var docFrag = '',
+				directoryArr = [
+	        		{
+	        			name: '8ball',
+	        			link: 'http://8ball.beautifuluniquesnowflake.com/',
+	        			size: '',
+	        			desc: 'virtual magic 8 ball'
+	        		},
+	        		{
+	        			name: 'ConsultantCalc',
+	        			link: 'http://consultantcalc.beautifuluniquesnowflake.com/',
+	        			size: '',
+	        			desc: 'consultant compensation calculator'
+	        		},
+	        		{
+	        			name: 'Endless',
+	        			link: 'http://endless.beautifuluniquesnowflake.com/',
+	        			size: '',
+	        			desc: '4-way scrolling slideshow'
+	        		},
+	        		{
+	        			name: 'OhHell',
+	        			link: 'http://ohhell.beautifuluniquesnowflake.com/',
+	        			size: '',
+	        			desc: 'online version of oh hell card game'
+	        		},
+	        		{
+	        			name: 'shapeDance',
+	        			link: 'http://shapedance.beautifuluniquesnowflake.com/',
+	        			size: '',
+	        			desc: 'dancing shapes'
+	        		},
+	        		{
+	        			name: 'README.md',
+	        			link: 'http://www.beautifuluniquesnowflake.com/README.md',
+	        			size: '158 bytes',
+	        			desc: '',
+	        			file: true
+	        		}
+	        	];
+
+			$.each(directoryArr, function (index, item) {
+				docFrag += '<tr><td class="name"><a ';
+				if (item.file === true) docFrag += 'class="file" ';
+				docFrag += 'href="' + item.link + '"><span>' + item.name + '</span></a></td><td class="size">';
+				if (item.size !== '') {
+					docFrag += item.size;
+				} else {
+					docFrag += '&nbsp;&ndash;';
+				}
+				docFrag += '</td><td class="description">';
+				if (item.desc !== '') {
+					docFrag += item.desc;
+				} else {
+					docFrag += '&nbsp;';
+				}
+				docFrag += '</td></tr>';
+			});
+
+			$(document).ready(function() {
+				$('tbody').prepend(docFrag);
+			});
+
+        </script>
+
+	</head>
+    <body>
+        <!--[if lt IE 9]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+		<h1>Index of <a href="/">/</a></h1>
+
+		<table>
+			<thead>
+				<tr>
+					<th class="name">Name</th>
+					<th class="size">Size</th>
+					<th class="description">Description</th>
+				</tr>
+				<tr class="divider">
+					<th colspan="3">
+						<hr>
+					</th>
+				</tr>
+			</thead>
+			<tfoot></tfoot>
+			<tbody>
+				<tr class="divider">
+					<th colspan="3">
+						<hr>
+					</th>
+				</tr>
+			</tbody>
+		</table>
+
+		<footer>
+			<ul>
+				<li>fauxPache Server at localhost Port 80</li>
+				<li>
+					<a href="http://twitter.com/briznad/">@briznad</a>
+				</li>
+				<li>
+					<a href="http://www.beautifuluniquesnowflake.com/README.md">About</a>
+				</li>
+			</ul>
+		</footer>
+
+        <script>
+            var _gaq=[['_setAccount','UA-36834242-1'],['_setDomainName', 'beautifuluniquesnowflake.com'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+    </body>
+</html>

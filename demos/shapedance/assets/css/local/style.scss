@@ -1,0 +1,604 @@
+/* ==========================================================================
+   my custom styles
+   ========================================================================== */
+
+// mixins
+
+@mixin prefix($rule, $val) {
+	@each $browser in -webkit-, -moz-, -ms-, -o-, "" {
+		#{$browser}#{$rule}: $val;
+	}
+}
+
+@mixin animation($name, $timing-function: ease-in-out) {
+	@include prefix(animation, $name 2s infinite $timing-function);
+}
+
+// /mixins
+
+// color variables
+
+$red: rgba(195, 0, 11, 0.627);
+$green: rgba(0, 130, 68, 0.694);
+$blue: rgba(0, 100, 163, 0.737);
+$yellow: rgba(223, 189, 0, 0.694);
+
+// /color variables
+
+// size variables
+
+$cellSize: 84px;
+$tablePadding: 40px;
+
+// /size variables
+
+/* helper styles */
+
+.visually-hidden {
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px,1px,1px,1px);
+    padding: 0 !important;
+    border: 0 !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden;
+}
+
+.relative-container {
+    position: relative;
+}
+
+/* /helper styles */
+
+/* import animation keyframes */
+
+@import "keyframes";
+
+/* /import animation keyframes */
+
+/* general page styles */
+
+html {
+	background-color: #fff;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-weight: 300;
+
+	margin: 0;
+	padding: 0;
+}
+
+article {
+	width: $cellSize;
+	height: $cellSize;
+	position: absolute;
+
+	@include prefix(box-sizing, border-box);
+}
+
+/* row & cell positioning */
+
+@for $i from 1 through 5 {
+	article[class*="row-#{$i}"] {
+		top: $tablePadding + (($i - 1) * $cellSize);
+	}
+	article[class*="cell-#{$i}"] {
+		left: $tablePadding + (($i - 1) * $cellSize);
+	}
+}
+
+/* /row & cell positioning */
+
+div {
+	position: inherit;
+}
+
+div[class^="item-"] {
+	@include prefix(box-sizing, inherit);
+}
+
+/* row 1 */
+
+.row-1 {
+	$currentRow: 1;
+
+	&.cell-1 {
+		$currentCell: 1;
+
+		width: $cellSize/2;
+		height: $cellSize/2;
+		border: 10px solid $red;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+	&.cell-2 {
+		$currentCell: 2;
+
+		height: $cellSize/2;
+		top: $cellSize/2 + $tablePadding;
+		border-bottom-left-radius: $cellSize/2;
+		border-bottom-right-radius: $cellSize/2;
+		background-color: $green;
+
+		@include prefix(transform-origin, center bottom);
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+
+		&:after {
+			content: "";
+			display: block;
+			position: absolute;
+			width: $cellSize/2;
+			height: $cellSize/2;
+			left: 25%;
+			bottom: 100%;
+			border-radius: $cellSize/4;
+			background-color: $blue;
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-after);
+		}
+	}
+	&.cell-3 {
+		$currentCell: 3;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell}, linear);
+
+		&:before,
+		&:after {
+			content: "";
+			width: $cellSize/2;
+			height: $cellSize/2;
+			display: block;
+			position: absolute;
+		}
+		&:before {
+			left: 0;
+			top: 0;
+			border-top-left-radius: $cellSize/2;
+			background-color: $yellow;
+		}
+		&:after {
+			right: 0;
+			bottom: 0;
+			border-bottom-right-radius: $cellSize/2;
+			background-color: $blue;
+		}
+	}
+	&.cell-4 {
+		$currentCell: 4;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+
+		&:after {
+			content: "";
+			display: block;
+			position: absolute;
+			width: $cellSize/2;
+			height: 100%;
+			left: 0;
+			background-color: $red;
+
+			@include prefix(transform-origin, left center);
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-after);
+		}
+	}
+	&.cell-5 {
+		$currentCell: 5;
+
+		.item-1 {
+			width: 0;
+			height: 0;
+			bottom: 0;
+			border-bottom: $cellSize/2 solid $blue;
+			border-right: $cellSize/2 solid transparent;
+
+			@include prefix(transform-origin, left top);
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-item-1);
+		}
+
+		.item-2 {
+			width: 0;
+			height: 0;
+			right: 0;
+			top: 0;
+			border-bottom: $cellSize/2 solid $green;
+			border-right: $cellSize/2 solid transparent;
+
+			@include prefix(transform-origin, left bottom);
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-item-2, cubic-bezier(0.115, 0.055, 0, 1));
+		}
+	}
+}
+
+/* /row 1 */
+
+/* row 2 */
+
+.row-2 {
+	$currentRow: 2;
+
+	&.cell-1 {
+		$currentCell: 1;
+
+		border: 10px solid $yellow;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+	&.cell-2 {
+		$currentCell: 2;
+
+		background-color: $red;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+	&.cell-3 {
+		$currentCell: 3;
+
+		width: 0;
+		height: 0;
+		border-bottom: $cellSize solid $yellow;
+		border-left: $cellSize/2 solid transparent;
+		border-right: $cellSize/2 solid transparent;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+	&.cell-4 {
+		$currentCell: 4;
+
+		background-color: $blue;
+		border-radius: $cellSize/2;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+	&.cell-5 {
+		$currentCell: 5;
+
+		width: 0;
+		height: 0;
+		top: 239px;
+		border-bottom: $cellSize/2 solid $red;
+		border-left: $cellSize solid transparent;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+}
+
+/* /row 2 */
+
+/* row 3 */
+
+.row-3 {
+	$currentRow: 3;
+
+	&.cell-1 {
+		$currentCell: 1;
+
+		width: 22px;
+		height: 22px;
+		left: 72px;
+		top: 238px;
+		border-radius: 11px;
+		background-color: $red;
+
+		@include prefix(transform, rotate(-45deg));
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+
+		&:before,
+		&:after {
+			content: "";
+			display: block;
+			position: absolute;
+			width: 22px;
+			height: 22px;
+			left: 13px;
+			border-radius: 11px;
+			background-color: $green;
+
+			/* chrome only seems to support the combined animation rule for psuedo element generated content, not the individual animation rule componenets. weird. */
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-before);
+		}
+		&:after {
+			left: -13px;
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-after);
+		}
+	}
+	&.cell-2 {
+		$currentCell: 2;
+
+		height: 20px;
+		top: 272px;
+		background-color: $blue;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+	&.cell-3 {
+		$currentCell: 3;
+
+		width: 0;
+		height: 0;
+		border-bottom: $cellSize solid $green;
+		border-left: $cellSize solid transparent;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+	&.cell-4 {
+		$currentCell: 4;
+
+		height: 10px;
+		top: 245px;
+		background-color: $red;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell}, linear);
+	}
+	&.cell-5 {
+		$currentCell: 5;
+
+		width: 0;
+		height: 0;
+		top: 260px;
+		border-color: transparent transparent $blue transparent;
+		border-width: 0 $cellSize/2 32px $cellSize/2;
+		border-style: solid;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+}
+
+/* /row 3 */
+
+/* row 4 */
+
+.row-4 {
+	$currentRow: 4;
+
+	&.cell-1 {
+		$currentCell: 1;
+
+		width: $cellSize - 20;
+		height: $cellSize - 20;
+		top: 312px;
+		overflow: hidden;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+
+		.item-1 {
+			width: 100%;
+			height: 100%;
+			border-radius: 50%;
+			background-color: $red;
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-item-1);
+		}
+		.item-2 {
+			width: 50%;
+			height: 100%;
+			right: -50%;
+			border-top-right-radius: ($cellSize - 20) / 2;
+			border-bottom-right-radius: ($cellSize - 20) / 2;
+			background-color: $blue;
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-item-2);
+		}
+		.mask {
+			width: 100%;
+			height: 100%;
+			left: -20px;
+			top: -20px;
+			border-radius: 50%;
+			border: 20px solid #fff;
+		}
+	}
+	&.cell-2 {
+		$currentCell: 2;
+
+		width: $cellSize - 10;
+		height: $cellSize - 10;
+		top: 302px;
+		border: 30px solid $yellow;
+		border-radius: $cellSize/2;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+	&.cell-3 {
+		$currentCell: 3;
+
+		overflow: hidden;
+
+		&:after {
+			content: "";
+			display: block;
+			position: absolute;
+			width: 100%;
+			height: $cellSize + 10;
+			top: 10px;
+			background-color: $blue;
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-after);
+		}
+	}
+	&.cell-4 {
+		$currentCell: 4;
+
+		height: $cellSize - 20;
+		top: 312px;
+		overflow: hidden;
+
+		&:before,
+		&:after {
+			content: "";
+			display: block;
+			position: absolute;			;
+			background-color: $red;
+		}
+		&:before {
+			width: $cellSize;
+			height: $cellSize * 1.5;
+
+			@include prefix(transform-origin, left top);
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-before, linear);
+		}
+		&:after {
+			width: $cellSize;
+			height: $cellSize * 1.5;
+			right: 100%;
+
+			@include prefix(transform-origin, right top);
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-after, linear);
+		}
+	}
+	&.cell-5 {
+		$currentCell: 5;
+
+		height: $cellSize - 30;
+		top: 322px;
+
+		&:after {
+			content: "";
+			display: block;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			bottom: 0;
+			background-color: $yellow;
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-after);
+		}
+	}
+}
+
+/* /row 4 */
+
+/* row 5 */
+
+.row-5 {
+	$currentRow: 5;
+
+	&.cell-1 {
+		$currentCell: 1;
+
+		.item-1 {
+			width: 0;
+			height: 0;
+			border-bottom: $cellSize solid $green;
+			border-left: $cellSize solid transparent;
+
+			@include prefix(transform-origin, right bottom);
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-item-1);
+		}
+		.item-2 {
+			width: 32px;
+			height: 32px;
+			bottom: 0;
+			border-radius: 16px;
+			background-color: $green;
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-item-2);
+		}
+	}
+	&.cell-2 {
+		$currentCell: 2;
+
+		.item-1 {
+			width: 0;
+			height: 0;
+			bottom: 0;
+			border-bottom: $cellSize/2 solid $red;
+			border-right: $cellSize/2 solid transparent;
+
+			@include prefix(transform-origin, left bottom);
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-item-1);
+		}
+		.item-2 {
+			width: 32px;
+			height: 32px;
+			left: -32px;
+			bottom: 162px;
+			border-radius: 16px;
+			background-color: $red;
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-item-2);
+		}
+	}
+	&.cell-3 {
+		$currentCell: 3;
+
+		height: $cellSize/2 - 10;
+		top: 428px;
+		background-color: $yellow;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+	&.cell-4 {
+		$currentCell: 4;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+
+		.item-1,
+		.item-2 {
+			width: $cellSize/2;
+			height: $cellSize/2;
+		}
+		.item-1 {
+			left: 0;
+			top: 0;
+			border-top-right-radius: $cellSize/2;
+			background-color: $yellow;
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-item-1);
+		}
+		.item-2 {
+			right: 0;
+			bottom: 0;
+			border-bottom-left-radius: $cellSize/2;
+			background-color: $green;
+
+			@include animation(row-#{$currentRow}-cell-#{$currentCell}-item-2);
+		}
+	}
+	&.cell-5 {
+		$currentCell: 5;
+
+		width: $cellSize/2;
+		left: 418px;
+		border: 10px solid $red;
+
+		@include animation(row-#{$currentRow}-cell-#{$currentCell});
+	}
+}
+
+/* /row 5 */
+
+/* dev */
+
+
+
+/* /dev */
+
+/* /general page styles */
+
+/* responsive media queries */
+
+@media (min-width: 1025px) { /* if larger than typical tablet display, aka desktop styles */
+
+
+
+}
+
+@media (max-width: 480px) { /* if smaller or equal to typical phone display, aka phone styles */
+
+
+
+}
