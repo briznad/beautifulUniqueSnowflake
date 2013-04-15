@@ -9,21 +9,24 @@
 
         <!-- dev only
         <link rel="stylesheet" type="text/css" href="assets/css/local/style.css">
-        -->
+		-->
 
     	<!-- prod -->
     	<link rel="stylesheet" type="text/css" href="assets/css/css.cat.min.css">
+
 
 	</head>
     <body>
         <!--[if lt IE 9]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-
+    	<section class="dance-floor">
         	<article class="row-1 cell-1"></article>
         	<article class="row-1 cell-2"></article>
         	<article class="row-1 cell-3"></article>
-        	<article class="row-1 cell-4"></article>
+        	<article class="row-1 cell-4">
+        		<div class="mask"></div>
+        	</article>
         	<article class="row-1 cell-5">
         		<div class="item-1"></div>
         		<div class="item-2"></div>
@@ -65,6 +68,45 @@
         		<div class="item-2"></div>
         	</article>
         	<article class="row-5 cell-5"></article>
+        </section>
+
+        <footer>
+			<audio class="music" id="music" loop="loop" preload="auto" controls="controls">
+				<source src="assets/audio/Super_Sigil-Is_It_a_Song-stereo_reduced_64kpbs.mp3" type="audio/mpeg">
+				Your browser does not support Mp3 audio. Boo :(
+			</audio>
+			<aside class="play-overlay">
+				<span>Press Play</span>
+				<div class="play-arrow"></div>
+			</aside>
+			<cite class="attribution">
+				<ul class="attribution-list">
+					<li>by <a href="http://twitter.com/briznad" title="Do you use Twitter?">@briznad</a></li>
+					<li>
+						<a class="about-link" href="#">About</a>
+						<aside class="about-overlay">
+							<ul>
+								<li>This webpage is an html+css recreation of a clever <a href="http://shapedance.beautifuluniquesnowflake.com/assets/images/shape_dance.gif">animated gif</a> I found on <a href="http:reddit.com">reddit</a>. It draws heavily on the animation and transform properties of CSS3 to animate a series of shapes in various ways. Enjoy.</li>
+								<li><div xmlns:cc="http://creativecommons.org/ns#" about="urn:sha1:7ACYTF3YMVJTAK7S4ICGM4R6BJ5CCHDW">Music by <a rel="cc:attributionURL" property="cc:attributionName" href="http://ccmixter.org/files/Super_Sigil/39912"> Super_Sigil</a> / <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/">CC BY-NC 3.0</a></div></li>
+							</ul>
+						</aside>
+					</li>
+				</ul>
+			</cite>
+        </footer>
+
+        <div class="loading-overlay"><span class="visually-hidden">Loading Page Resources…</span></div>
+
+	    <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script>
+        <script>window.$ || document.write('<script src="assets/js/plugins/zepto.min.js"><\/script>')</script>
+
+	    <!-- dev only
+        <script src="assets/js/local/do.js"></script>
+		-->
+
+        <!-- prod -->
+        <script src="assets/js/js.cat.min.js"></script>
+
 
         <script>
             var _gaq=[['_setAccount','UA-36834242-1'],['_setDomainName', 'beautifuluniquesnowflake.com'],['_trackPageview']];

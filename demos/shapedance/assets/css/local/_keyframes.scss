@@ -41,6 +41,20 @@
     to		{ opacity: 1; }
 }
 
+/* dance floor */
+
+@include keyframe(dance-floor) {
+	from 	{	box-shadow: 0 0 25px #fff;	}
+	10%		{	box-shadow: 0 0 20px #fff;	}
+	40%		{	box-shadow: 0 0 20px #fff;	}
+	50%		{	box-shadow: 0 0 30px #fff;	}
+	60%		{	box-shadow: 0 0 20px #fff;	}
+	90%		{	box-shadow: 0 0 20px #fff;	}
+	100%	{	box-shadow: 0 0 25px #fff;	}
+}
+
+/* /dance floor */
+
 	/* row 1 */
 
 		/* cell 1 */
