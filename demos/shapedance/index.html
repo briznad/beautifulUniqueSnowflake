@@ -17,9 +17,7 @@
 
 	</head>
     <body>
-        <!--[if lt IE 9]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
+
     	<section class="dance-floor">
         	<article class="row-1 cell-1"></article>
         	<article class="row-1 cell-2"></article>
@@ -97,8 +95,12 @@
 
         <div class="loading-overlay"><span class="visually-hidden">Loading Page Resources…</span></div>
 
+        <!--[if lt IE 9]>
+            <p class="chromeframe" style="position: fixed; width: 100%; top: 0; margin: 0; padding: 15px; text-align: center; background-color: #555;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
 	    <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script>
-        <script>window.$ || document.write('<script src="assets/js/plugins/zepto.min.js"><\/script>')</script>
+        <script>window.Zepto || document.write('<script src="assets/js/plugins/zepto.min.js"><\/script>')</script>
 
 	    <!-- dev only
         <script src="assets/js/local/do.js"></script>
