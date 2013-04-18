@@ -11,5 +11,6 @@
 
 # TECHNOLOGY COLOPHON
 
-    HTML5/CSS3
-    SASS/SCSS
+    HTML5/CSS3/JavaScript
+    SASS
+    Zepto

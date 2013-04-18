@@ -6,21 +6,69 @@
 
     $(function() {
 
+    	$objectCache.html = $('html');
+
     	// once the page has fully loaded, do some shit
     	$(window).on('load', function () {
 
-	    	$objectCache.html = $('html');
-	    	$objectCache.music = $('#music');
+	    	$objectCache.html.addClass('delayed');
 
-	    	$objectCache.html.addClass('delayed loaded');
+		});
 
-			$objectCache.music.on('play', function () {
-	    		$objectCache.html.removeClass('paused').addClass('played');
-			});
+		$('#touchTargetTest').on('click', function(e) {
 
-			$objectCache.music.on('pause', function () {
-	    		$objectCache.html.addClass('paused');
-			});
+			var currentX = $(this).width(),
+				currentY = $(this).height();
+
+			if (e.offsetX/currentX < 0.5) { // left
+				if (e.offsetY/currentY < 0.5) { // top
+					if ((currentX/e.offsetX) > (currentY/e.offsetY)) {
+						console.log('left');
+					} else {
+						console.log('top');
+					}
+				} else { // bottom
+					if ((currentX/e.offsetX) > (currentY/(currentY-e.offsetY))) {
+						console.log('left');
+					} else {
+						console.log('bottom');
+					}
+				}
+			} else { // right
+				if (e.offsetY/currentY < 0.5) { // top
+					if ((currentX/e.offsetX) > (currentY/(currentY-e.offsetY))) {
+						console.log('top');
+					} else {
+						console.log('right');
+					}
+				} else { // bottom
+					if ((currentX/e.offsetX) > (currentY/e.offsetY)) {
+						console.log('bottom');
+					} else {
+						console.log('right');
+					}
+				}
+			}
+
+			/*
+			switch () {
+			   case :
+			      statements1
+			      break;
+			}
+
+			if ((currentX/e.offsetX) > (currentY/e.offsetY)) {
+				console.log('bottom left');
+			} else {
+				console.log('top right');
+			}
+
+			if ((currentX/e.offsetX) > (currentY/(currentY-e.offsetY))) {
+				console.log('top left');
+			} else {
+				console.log('bottom right');
+			}
+			*/
 
 		});
 
