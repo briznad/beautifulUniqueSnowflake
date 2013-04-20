@@ -1,8 +1,72 @@
 /* ==========================================================================
    my custom styles
    ========================================================================== */
+/* import animation keyframes */
+/* animation keyframes */
+@-webkit-keyframes fade-in {
+  /* line 28, _keyframes.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 29, _keyframes.scss */
+  50% {
+    opacity: 0;
+  }
+}
+
+@-moz-keyframes fade-in {
+  /* line 28, _keyframes.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 29, _keyframes.scss */
+  50% {
+    opacity: 0;
+  }
+}
+
+@-ms-keyframes fade-in {
+  /* line 28, _keyframes.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 29, _keyframes.scss */
+  50% {
+    opacity: 0;
+  }
+}
+
+@-o-keyframes fade-in {
+  /* line 28, _keyframes.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 29, _keyframes.scss */
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  /* line 28, _keyframes.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 29, _keyframes.scss */
+  50% {
+    opacity: 0;
+  }
+}
+
+/* /animation keyframes */
+/* /import animation keyframes */
 /* helper styles */
-/* line 37, style.scss */
+/* line 39, style.scss */
 .visually-hidden {
   position: absolute !important;
   clip: rect(1px 1px 1px 1px);
@@ -14,24 +78,24 @@
   overflow: hidden;
 }
 
-/* line 48, style.scss */
+/* line 50, style.scss */
 .relative-container {
   position: relative;
 }
 
 /* /helper styles */
 /* general page styles */
-/* line 56, style.scss */
+/* line 58, style.scss */
 html {
   background-color: #3a3a3a;
 }
 
-/* line 60, style.scss */
+/* line 62, style.scss */
 html.delayed {
   background-image: url(http://shapedance.beautifuluniquesnowflake.com/assets/images/low_contrast_linen.png);
 }
 
-/* line 64, style.scss */
+/* line 66, style.scss */
 body {
   margin: 0;
   padding: 0;
@@ -41,151 +105,150 @@ body {
   color: whitesmoke;
 }
 
-/* line 73, style.scss */
+/* line 75, style.scss */
 a {
   font-weight: bold;
   text-decoration: none;
   color: #ebebeb;
 }
-/* line 78, style.scss */
+/* line 80, style.scss */
 a:hover {
   text-decoration: underline;
 }
 
-/* line 83, style.scss */
+/* pbj plugin styles */
+/* line 87, style.scss */
 ._pbj-viewport {
-  overflow: hidden;
   position: relative;
-  width: 600px;
-  height: 400px;
+  overflow: hidden;
+  border-style: solid;
+  border-radius: 4px;
+  -webkit-animation: fade-in 0.5s ease-in-out;
+  -moz-animation: fade-in 0.5s ease-in-out;
+  -ms-animation: fade-in 0.5s ease-in-out;
+  -o-animation: fade-in 0.5s ease-in-out;
+  animation: fade-in 0.5s ease-in-out;
 }
 
-/* line 91, style.scss */
+/* line 96, style.scss */
 ._pbj-inner {
-  width: 300%;
   margin: 0;
   padding: 0;
-  -webkit-transition: all 1s;
-  -moz-transition: all 1s;
-  -ms-transition: all 1s;
-  -o-transition: all 1s;
-  transition: all 1s;
-  -webkit-transform: translate3d(-33.33333%, 0, 0);
-  -moz-transform: translate3d(-33.33333%, 0, 0);
-  -ms-transform: translate3d(-33.33333%, 0, 0);
-  -o-transform: translate3d(-33.33333%, 0, 0);
-  transform: translate3d(-33.33333%, 0, 0);
-  -webkit-transform: translate3d(-66.66666%, 0, 0);
-  -moz-transform: translate3d(-66.66666%, 0, 0);
-  -ms-transform: translate3d(-66.66666%, 0, 0);
-  -o-transform: translate3d(-66.66666%, 0, 0);
-  transform: translate3d(-66.66666%, 0, 0);
+  list-style: none;
+  -webkit-animation: fade-in 1.25s ease-in-out;
+  -moz-animation: fade-in 1.25s ease-in-out;
+  -ms-animation: fade-in 1.25s ease-in-out;
+  -o-animation: fade-in 1.25s ease-in-out;
+  animation: fade-in 1.25s ease-in-out;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transition: -webkit-transform 1s;
+  -moz-transition: -moz-transform 1s;
+  -ms-transition: -ms-transform 1s;
+  -o-transition: -o-transform 1s;
+  transition: transform 1s;
 }
 
-/* line 100, style.scss */
+/* line 111, style.scss */
 ._pbj-img-container {
   display: block;
   float: left;
-  list-style-type: none;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
-/* line 106, style.scss */
+/* line 118, style.scss */
 ._pbj-img {
   display: block;
 }
 
-/* line 110, style.scss */
+/* line 122, style.scss */
 ._pbj-tap-map {
-  width: 600px;
-  height: 400px;
-  position: relative;
-  overflow: hidden;
-}
-
-/* line 120, style.scss */
-._pbj-tap-w,
-._pbj-tap-e,
-._pbj-tap-n,
-._pbj-tap-s {
-  width: 50%;
-  left: 0;
+  width: 100%;
+  height: 100%;
   position: absolute;
 }
 
-/* line 128, style.scss */
+/* line 130, style.scss */
+._pbj-tap {
+  width: 50%;
+  position: absolute;
+}
+
+/* line 137, style.scss */
 ._pbj-tap-e,
 ._pbj-tap-n-2,
 ._pbj-tap-s-2 {
   left: 50%;
 }
 
-/* line 133, style.scss */
+/* line 142, style.scss */
 ._pbj-tap-w,
 ._pbj-tap-e {
   height: 100%;
 }
 
-/* line 138, style.scss */
+/* line 147, style.scss */
 ._pbj-tap-n,
 ._pbj-tap-s {
+  width: 100%;
   height: 50%;
 }
 
-/* line 142, style.scss */
-._pbj-tap-w {
-  cursor: w-resize;
-  background-color: red;
+/* line 155, style.scss */
+._pbj-tap-n-1,
+._pbj-tap-n-2,
+._pbj-tap-s-1,
+._pbj-tap-s-2 {
+  width: 50%;
 }
 
-/* line 147, style.scss */
-._pbj-tap-e {
-  cursor: e-resize;
-  background-color: blue;
-}
-
-/* line 152, style.scss */
-._pbj-tap-n {
-  -webkit-transform-origin-y: bottom;
-  cursor: n-resize;
-  background-color: green;
-}
-
-/* line 158, style.scss */
-._pbj-tap-s {
-  bottom: 0;
-  -webkit-transform-origin-y: top;
-  cursor: s-resize;
-  background-color: yellow;
-}
-
-/* line 166, style.scss */
+/* line 160, style.scss */
 ._pbj-tap-n-1,
 ._pbj-tap-s-1 {
   -webkit-transform-origin-x: right;
 }
 
-/* line 171, style.scss */
+/* line 165, style.scss */
 ._pbj-tap-n-2,
 ._pbj-tap-s-2 {
   -webkit-transform-origin-x: left;
 }
 
-/* line 176, style.scss */
-._pbj-tap-n-1,
-._pbj-tap-s-2 {
-  -webkit-transform: skewY(33.69deg);
+/* line 169, style.scss */
+._pbj-tap-w {
+  cursor: w-resize;
 }
 
-/* line 181, style.scss */
-._pbj-tap-n-2,
-._pbj-tap-s-1 {
-  -webkit-transform: skewY(-33.69deg);
+/* line 174, style.scss */
+._pbj-tap-e {
+  cursor: e-resize;
 }
 
+/* line 179, style.scss */
+._pbj-tap-n {
+  -webkit-transform-origin-y: bottom;
+  cursor: n-resize;
+}
+
+/* line 185, style.scss */
+._pbj-tap-s {
+  bottom: 0;
+  -webkit-transform-origin-y: top;
+  cursor: s-resize;
+}
+
+/* /pbj plugin styles */
 /* state-specific styles */
 /* /state-specific styles */
 /* dev */
-/* line 197, style.scss */
+/* line 206, style.scss */
 body {
   padding: 1em;
 }
