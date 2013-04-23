@@ -134,6 +134,7 @@ a:hover {
 ._pbj-inner {
   margin: 0;
   padding: 0;
+  overflow: auto;
   list-style: none;
   -webkit-animation: fade-in 1.25s ease-in-out;
   -moz-animation: fade-in 1.25s ease-in-out;
@@ -152,7 +153,7 @@ a:hover {
   transition: transform 1s;
 }
 
-/* line 111, style.scss */
+/* line 112, style.scss */
 ._pbj-img-container {
   display: block;
   float: left;
@@ -163,81 +164,93 @@ a:hover {
   backface-visibility: hidden;
 }
 
-/* line 118, style.scss */
+/* line 119, style.scss */
 ._pbj-img {
   display: block;
+  position: relative;
 }
 
-/* line 122, style.scss */
+/* line 124, style.scss */
 ._pbj-tap-map {
   width: 100%;
   height: 100%;
   position: absolute;
+  top: 0;
+  left: 0;
 }
 
-/* line 130, style.scss */
+/* line 132, style.scss */
 ._pbj-tap {
-  width: 50%;
   position: absolute;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-/* line 137, style.scss */
+/* line 141, style.scss */
 ._pbj-tap-e,
 ._pbj-tap-n-2,
 ._pbj-tap-s-2 {
   left: 50%;
 }
 
-/* line 142, style.scss */
+/* line 146, style.scss */
 ._pbj-tap-w,
 ._pbj-tap-e {
+  width: 50%;
   height: 100%;
 }
 
-/* line 147, style.scss */
+/* line 152, style.scss */
 ._pbj-tap-n,
 ._pbj-tap-s {
   width: 100%;
   height: 50%;
 }
 
-/* line 155, style.scss */
+/* line 160, style.scss */
 ._pbj-tap-n-1,
 ._pbj-tap-n-2,
 ._pbj-tap-s-1,
 ._pbj-tap-s-2 {
-  width: 50%;
+  width: 25%;
+  height: 33.333%;
 }
 
-/* line 160, style.scss */
+/* line 169, style.scss */
+.shaped._pbj-tap-n-1, .shaped._pbj-tap-n-2, .shaped._pbj-tap-s-1, .shaped._pbj-tap-s-2 {
+  width: 50%;
+  height: 50%;
+}
+
+/* line 177, style.scss */
 ._pbj-tap-n-1,
 ._pbj-tap-s-1 {
+  right: 50%;
   -webkit-transform-origin-x: right;
 }
 
-/* line 165, style.scss */
+/* line 183, style.scss */
 ._pbj-tap-n-2,
 ._pbj-tap-s-2 {
   -webkit-transform-origin-x: left;
 }
 
-/* line 169, style.scss */
+/* line 187, style.scss */
 ._pbj-tap-w {
   cursor: w-resize;
 }
 
-/* line 174, style.scss */
+/* line 192, style.scss */
 ._pbj-tap-e {
   cursor: e-resize;
 }
 
-/* line 179, style.scss */
+/* line 197, style.scss */
 ._pbj-tap-n {
   -webkit-transform-origin-y: bottom;
   cursor: n-resize;
 }
 
-/* line 185, style.scss */
+/* line 203, style.scss */
 ._pbj-tap-s {
   bottom: 0;
   -webkit-transform-origin-y: top;
@@ -248,7 +261,7 @@ a:hover {
 /* state-specific styles */
 /* /state-specific styles */
 /* dev */
-/* line 206, style.scss */
+/* line 224, style.scss */
 body {
   padding: 1em;
 }

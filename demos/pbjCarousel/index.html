@@ -18,44 +18,25 @@
 	</head>
     <body>
 
-    	<!--
-
-    	<div id="exCarousel" class="_pbj-viewport" style="width: 600px; height: 400px;">
-    		<ul class="_pbj-inner" style="width: 300%;">
-    			<li class="_pbj-img-container"><img class="_pbj-img" src="http://placekitten.com/g/600/400" alt="kitten 1"></li>
-	    		<li class="_pbj-img-container"><img class="_pbj-img" src="http://placekitten.com/600/400" alt="kitten 2"></li>
-	    		<li class="_pbj-img-container"><img class="_pbj-img" src="http://placekitten.com/580/380" alt="kitten 3"></li>
-    		</ul>
-    		<p style="position: absolute;">This is some text!</p>
-    		<div class="_pbj-tap-map">
-				<a class="_pbj-tap _pbj-tap-n" data-pbj-adv="up"><span class="visually-hidden">slide down</span></a>
-				<a class="_pbj-tap _pbj-tap-s" data-pbj-adv="down"><span class="visually-hidden">slide up</span></a>
-				<a class="_pbj-tap _pbj-tap-e" data-pbj-adv="right"><span class="visually-hidden">slide left</span></a>
-				<a class="_pbj-tap _pbj-tap-w" data-pbj-adv="left"><span class="visually-hidden">slide right</span></a>
-				<a class="_pbj-tap _pbj-tap-n _pbj-tap-n-1" data-pbj-adv="up"><span class="visually-hidden">slide down</span></a>
-				<a class="_pbj-tap _pbj-tap-n _pbj-tap-n-2" data-pbj-adv="up"><span class="visually-hidden">slide down</span></a>
-				<a class="_pbj-tap _pbj-tap-s _pbj-tap-s-1" data-pbj-adv="down"><span class="visually-hidden">slide up</span></a>
-				<a class="_pbj-tap _pbj-tap-s _pbj-tap-s-2" data-pbj-adv="down"><span class="visually-hidden">slide up</span></a>
-			</div>
-    	</div>
-
-    	<hr>
-
-	    -->
-
-    	<div id="carousel">
+    	<div id="carousel" class="carousel">
     		<ul class="horizontal" data-pbj-direction="horizontal">
     			<li><img src="http://placekitten.com/g/600/400" alt="kitten test 1"></li>
+    			<li><img src="http://placekitten.com/700/300"></li>
     			<li><img src="http://placekitten.com/580/380" alt=""></li>
     			<li><img src="http://placekitten.com/600/400"></li>
     			<li><img src="http://placekitten.com/g/580/380" alt="kitten"></li>
     		</ul>
-    		<!--<div>
+    	</div>
+
+    	<!--
+    	<div id="carousel" class="carousel">
+    		<div data-pbj-direction="horizontal">
 	    		<section><img src="assets/images/kitten-1.jpg" alt="kitten 1"></section>
 	    		<section><img src="assets/images/kitten-2.jpg" alt="kitten 2"></section>
 	    		<section><img src="assets/images/kitten-3.jpg"></section>
-	    	</div>-->
+	    	</div>
     	</div>
+	    -->
 
     	<!--
 
@@ -80,6 +61,7 @@
         <script>window.Zepto || document.write('<script src="assets/js/plugins/zepto.min.js"><\/script>')</script>
 
 	    <!-- dev only -->
+        <script src="assets/js/plugins/jquery.zepto-touch.js"></script>
         <script src="assets/js/plugins/jquery.pbjcarousel.js"></script>
         <script src="assets/js/local/do.js"></script>
 

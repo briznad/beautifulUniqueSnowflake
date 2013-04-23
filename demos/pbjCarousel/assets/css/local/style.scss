@@ -96,6 +96,7 @@ a {
 ._pbj-inner {
 	margin: 0;
 	padding: 0;
+	overflow: auto;
 	list-style: none;
 
 	@include prefix(animation, fade-in 1.25s ease-in-out);
@@ -117,19 +118,22 @@ a {
 
 ._pbj-img {
 	display: block;
+	position: relative;
 }
 
 ._pbj-tap-map {
 	width: 100%;
 	height: 100%;
     position: absolute;
-
-    //opacity: 0.2;
+    top: 0;
+	left: 0;
 }
 
 ._pbj-tap {
-    width: 50%;
     position: absolute;
+
+    // to disable the grey overlay when clicking a link on mobile safari/chrome
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 ._pbj-tap-e,
@@ -140,6 +144,7 @@ a {
 
 ._pbj-tap-w,
 ._pbj-tap-e {
+	width: 50%;
     height: 100%;
 }
 
@@ -153,11 +158,24 @@ a {
 ._pbj-tap-n-2,
 ._pbj-tap-s-1,
 ._pbj-tap-s-2 {
-	width: 50%;
+	width: 25%;
+	height: 33.333%;
+}
+
+.shaped {
+	&._pbj-tap-n-1,
+	&._pbj-tap-n-2,
+	&._pbj-tap-s-1,
+	&._pbj-tap-s-2 {
+		width: 50%;
+		height: 50%;
+
+	}
 }
 
 ._pbj-tap-n-1,
 ._pbj-tap-s-1 {
+	right: 50%;
 	-webkit-transform-origin-x: right;
 }
 
