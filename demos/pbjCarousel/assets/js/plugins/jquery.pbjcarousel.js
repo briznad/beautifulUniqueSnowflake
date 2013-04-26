@@ -105,13 +105,9 @@
 			// adaptation of my whenVisible jQuery plugin
  			// http://plugins.jquery.com/whenvisible/
  			whenVisible: function(el, callback) {
- 				// el is required; if no el is specified just give up
-	        	if ( typeof( el ) === 'undefined' || el === null) return;
- 				// callback is required; if no callback is specified just give up
-	        	if ( typeof( callback ) === 'undefined' || callback === null) return;
 
-	        	var interval = 100,
-	        		timeout = 3000,
+	        	var interval = 50,
+	        		timeout = 6000,
 	        		isVisible = false,
 		        	si = null,
 		        	check = function () {
