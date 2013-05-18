@@ -10,6 +10,16 @@
 	}
 }
 
+@mixin clearfix {
+	&:after {
+		content: "";
+		display: block;
+		visibility: hidden;
+		height: 0;
+		clear: both;
+	}
+}
+
 // /mixins
 
 // color variables
@@ -82,46 +92,106 @@ a {
 	}
 }
 
-/* pbj plugin styles */
+/* pbjCarousel plugin styles */
 
-._pbj-viewport {
+.pbj-viewport {
 	position: relative;
-	overflow: hidden;
+	height: 400px;
+
+	overflow: scroll;
+	//overflow: hidden;
 	border-style: solid;
 	border-radius: 4px;
+
+	@include prefix(transition, height 0.5s ease-in-out);
 
 	@include prefix(animation, fade-in 0.5s ease-in-out);
 }
 
-._pbj-inner {
+.pbj-inner {
+	width: 300%;
 	margin: 0;
 	padding: 0;
-	overflow: auto;
 	list-style: none;
 
 	@include prefix(animation, fade-in 1.25s ease-in-out);
-	@include prefix(transform, translate3d(0, 0, 0));
 
-	-webkit-transition: -webkit-transform 1s;
-	-moz-transition: -moz-transform 1s;
-	-ms-transition: -ms-transform 1s;
-	-o-transition: -o-transform 1s;
-	transition: transform 1s;
-}
-
-._pbj-img-container {
-	display: block;
-	float: left;
+	@include prefix(transform, translate3d(-33.333%, -33.333%, 0));
 
 	@include prefix(backface-visibility, hidden);
+
+	@include clearfix;
 }
 
-._pbj-img {
+.pbj-move-up,
+.pbj-move-down,
+.pbj-move-left,
+.pbj-move-right {
+	-webkit-transition: -webkit-transform 1000ms;
+	-moz-transition: -moz-transform 1000ms;
+	-ms-transition: -ms-transform 1000ms;
+	-o-transition: -o-transform 1000ms;
+	transition: transform 1000ms;
+}
+
+.pbj-move-up {
+	@include prefix(transform, translate3d(-33.333%, 0, 0));
+
+	.pbj-img-container:first-child {
+		visibility: visible;
+	}
+}
+
+.pbj-move-down {
+	@include prefix(transform, translate3d(-33.333%, -66.666%, 0));
+
+	.pbj-img-container:last-child {
+		visibility: visible;
+	}
+}
+
+.pbj-move-left {
+	@include prefix(transform, translate3d(0%, -33.333%, 0));
+
+	.pbj-img-container:nth-child(2) {
+		visibility: visible;
+	}
+}
+
+.pbj-move-right {
+	@include prefix(transform, translate3d(-66.666%, -33.333%, 0));
+
+	.pbj-img-container:nth-child(4) {
+		visibility: visible;
+	}
+}
+
+.pbj-img-container {
+	display: block;
+	float: left;
+	text-align: center;
+	visibility: hidden;
+
+	&:nth-child(3) {
+		visibility: visible;
+	}
+
+	&:first-child,
+	&:last-child {
+		padding: 0 33.333%;
+	}
+}
+
+
+
+.pbj-img {
 	display: block;
 	position: relative;
 }
 
-._pbj-tap-map {
+/* tap target styles */
+
+.pbj-tap-map {
 	width: 100%;
 	height: 100%;
     position: absolute;
@@ -129,85 +199,83 @@ a {
 	left: 0;
 }
 
-._pbj-tap {
+.pbj-tap {
     position: absolute;
 
     // to disable the grey overlay when clicking a link on mobile safari/chrome
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-._pbj-tap-e,
-._pbj-tap-n-2,
-._pbj-tap-s-2 {
+.pbj-tap-e,
+.pbj-tap-n-2,
+.pbj-tap-s-2 {
 	left: 50%;
 }
 
-._pbj-tap-w,
-._pbj-tap-e {
+.pbj-tap-w,
+.pbj-tap-e {
 	width: 50%;
     height: 100%;
 }
 
-._pbj-tap-n,
-._pbj-tap-s {
+.pbj-tap-n,
+.pbj-tap-s {
 	width: 100%;
     height: 50%;
 }
 
-._pbj-tap-n-1,
-._pbj-tap-n-2,
-._pbj-tap-s-1,
-._pbj-tap-s-2 {
+.pbj-tap-n-1,
+.pbj-tap-n-2,
+.pbj-tap-s-1,
+.pbj-tap-s-2 {
 	width: 25%;
 	height: 33.333%;
 }
 
-.shaped {
-	&._pbj-tap-n-1,
-	&._pbj-tap-n-2,
-	&._pbj-tap-s-1,
-	&._pbj-tap-s-2 {
+.pbj-shaped {
+	&.pbj-tap-n-1,
+	&.pbj-tap-n-2,
+	&.pbj-tap-s-1,
+	&.pbj-tap-s-2 {
 		width: 50%;
 		height: 50%;
 
 	}
 }
 
-._pbj-tap-n-1,
-._pbj-tap-s-1 {
+.pbj-tap-n-1,
+.pbj-tap-s-1 {
 	right: 50%;
 	-webkit-transform-origin-x: right;
 }
 
-._pbj-tap-n-2,
-._pbj-tap-s-2 {
+.pbj-tap-n-2,
+.pbj-tap-s-2 {
 	-webkit-transform-origin-x: left;
 }
 
-._pbj-tap-w {
+.pbj-tap-w {
 	cursor: w-resize;
-	//background-color: red;
 }
 
-._pbj-tap-e {
+.pbj-tap-e {
     cursor: e-resize;
-    //background-color: blue;
 }
 
-._pbj-tap-n {
+.pbj-tap-n {
 	-webkit-transform-origin-y: bottom;
 	cursor: n-resize;
-	//background-color: green;
 }
 
-._pbj-tap-s {
+.pbj-tap-s {
     bottom: 0;
     -webkit-transform-origin-y: top;
     cursor: s-resize;
-    //background-color: yellow;
 }
 
-/* /pbj plugin styles */
+/* /tap target styles */
+
+/* /pbjCarousel plugin styles */
 
 /* state-specific styles */
 

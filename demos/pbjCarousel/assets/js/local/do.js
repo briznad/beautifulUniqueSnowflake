@@ -15,7 +15,7 @@
 
 		});
 
-		$('.carousel').pbjCarousel({ imagePlacement: 'alignMiddle' });
+		$('.carousel').pbjCarousel();
 
 	});
 

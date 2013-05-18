@@ -32,14 +32,92 @@
         // Therefore reverse reference is only supported with jQuery or custom Zepto build
         //base.$el.data("pbjCarousel", base);
 
-        var methods = {
+        // store positioning functions in here
+        var position = {
+        	width: function() {
+        		// grab the width from the viewport el, but subtract the borders
+	        	base.width = base.$el.width() - (base.options.borderSize * 2);
+
+        		// once base width is set, apply it to all images
+				base.$imgs.attr({
+					width: base.width
+				});
+        	},
+
+        	imgLoadCount: 5,
+
+        	imgLoad: function(callback) {
+
+        		// count down from 5
+        		position.imgLoadCount--;
+
+        		// when all 5 imgs have loaded fire the callback
+        		if (!position.imgLoadCount) {
+        			position.height();
+        			position.tapMap();
+        		}
+        	},
+
+        	height: function() {
+
+        		// grab the height from inner, divided by 3
+        		base.height = base.$inner.height() / 3;
+
+        		// apply base height to el
+        		base.$el.css('height', base.height);
+
+        	},
+
+        	tapMap: function() {
+        		// in order to create shaped "tap" (click) targets we must do some maths
+	        	// imagine drawing 2 diagonal lines, 1 from the top left to the bottom right corner, the other from the top right to bottom left corner
+	        	//
+	        	// +------+
+	        	// |\  n /|
+	        	// | \  / |
+	        	// |  \/  |
+	        	// |w /\ e|
+	        	// | /  \ |
+	        	// |/  s \|
+	        	// +------+
+	        	//
+	        	// we shape the north/top/up and south/bottom/down sections and overlay them on the rectangular east/right, west/left sections
+	        	// to find the necessary skew angle for the north and south elements we use the folliwng equation:
+	        	// sin A = opp/hyp
+	        	// the opposite side is a, the current height of el
+	        	// the hypotenuse can be solved using the Pythagorean theorem. as stated immediately above, side a is the current height of el and side b, the current width of el
+	        	// js Math methods spit out radians, so we'll need to convert that to degrees (actually we could totally use radians but it's Greek to me)
+				var skewAngle = Math.asin(base.height/Math.sqrt(Math.pow(base.width, 2) + Math.pow(base.height, 2))) * (180 / Math.PI);
+
+				// set the special skewed click targets to use the determined angle
+				base.$skewPos.css(methods.prefixr('transform', 'skewY(' + skewAngle + 'deg)')).addClass('pbj-shaped');
+				base.$skewNeg.css(methods.prefixr('transform', 'skewY(' + (skewAngle * -1) + 'deg)')).addClass('pbj-shaped');
+        	}
+        },
+
+        events = {
+        	click: function() {
+        		// load tap target click function once
+	        	base.$tapTarget.one('click.pbj', function(e) {
+	        		e.preventDefault();
+	        		e.stopImmediatePropagation();
+	        		methods.doSlide($(this).data('pbjAdv'));
+	        	});
+        	},
+        	resize: function() {
+        		// on throttled window resize, load layout figurer outer function
+	        	$(window).on('resize.pbj', methods.throttle(methods.doLayoutResize, 100));
+        	}
+        },
+
+        methods = {
 
 	        init: function() {
 	            // add options to the mix
 	            base.options = $.extend({},$[pluginName].defaultOptions, options);
 
 	            // first things first, add "viewport" class to base el. this allows us to add some immediate styling (like fading out) while we build things
-	            base.$el.addClass('_pbj-viewport');
+	            base.$el.addClass('pbj-viewport');
 
 	            // run the first build method, the image scavenger, which will kick off subsequent methods when it's done
 	            methods.doInitScavengry();
@@ -48,18 +126,21 @@
 	        // cache DOM els for future use
 	        doCacheEls: function() {
 	        	// cache "inner"
-	        	base.$inner = base.$el.find('._pbj-inner');
+	        	base.$inner = base.$el.find('.pbj-inner');
+
+	        	// cache center img container
+	        	base.$centerImg = base.$el.find('.pbj-img-container:nth-child(3) .pbj-img');
 
 	        	// cache imgs
-	        	base.$imgs = base.$el.find('._pbj-img');
+	        	base.$imgs = base.$el.find('.pbj-img');
 
 	        	// cache needed tap targets
-				base.$tapTarget = base.$el.find('._pbj-tap');
-				base.$skewPos = base.$el.find('._pbj-tap-n-1, ._pbj-tap-s-2');
-	        	base.$skewNeg = base.$el.find('._pbj-tap-n-2, ._pbj-tap-s-1');
+				base.$tapTarget = base.$el.find('.pbj-tap');
+				base.$skewPos = base.$el.find('.pbj-tap-n-1, .pbj-tap-s-2');
+	        	base.$skewNeg = base.$el.find('.pbj-tap-n-2, .pbj-tap-s-1');
 
 	        	// now that those els are cached, lets get the layout looking spiffy and register some events
-	        	methods.doLayoutParams();
+	        	methods.doLayoutInitSize();
 	        	methods.doRegisterEvents();
 	        },
 
@@ -70,6 +151,16 @@
 					tempObj[prefix + rule] = val;
 				});
 				return tempObj;
+	        },
+
+	        // compute next frame
+	        nextFrame: function(plane, increment, save) { // plane ? 0 : 1 [, increment ? true : false ] [, save ? true : false ]
+	        	if (increment) var product = (base.currentFrame[plane] + 1 === base.catalog[plane].length) ? 0 : base.currentFrame[plane] + 1;
+	        	else var product = (base.currentFrame[plane] - 1 < 0) ? base.catalog[plane].length - 1 : base.currentFrame[plane] - 1;
+
+	        	if (save) base.currentFrame[plane] = product;
+
+	        	return product;
 	        },
 
 	        // throttle function from Underscore 1.4.4
@@ -102,7 +193,156 @@
 				};
 			},
 
-			// adaptation of my whenVisible jQuery plugin
+	        doInitScavengry: function() {
+
+	        	// before we build up we must tear down
+
+	        	// loop through the provided img list/s, figure some things out, then hand it off to the processList function
+	        	base.$el.children().each(function() {
+	        		if ($(this).hasClass('horizontal') || $(this).data('pbjDirection') === 'horizontal') { // populate the horizontal catalog
+	        			processList(1, this);
+	        		} else { // populate the vertical catalog
+	        			processList(0, this);
+	        		}
+	        	});
+
+	        	// run 1 or more lists through the map function to extract necessary vals and then add to the appropriate catalog
+        		function processList(plane, currentList) { // plane can be either 1 (horizontal) or 0 (vertical)
+
+        			// init the catalog as an array containing 2 empty arrays
+		        	if (typeof base.catalog === 'undefined') base.catalog = [[], []];
+
+		        	// run the list, minus the parent element, through the map function, grabbing the src and alt vals, then dump each img object into the catalog
+		        	base.catalog[plane] = base.catalog[plane].concat($(currentList).find('img').map(function(i) {
+
+        				// if the current img lacks an alt property, attempt to add one based on the img filename, which is hopefully semantic enough to make sense
+		        		var tempAlt = (typeof this.alt === 'undefined' || this.alt === '') ? this.src.split('.').slice(-2, -1)[0].split('/').pop().replace('_', ' ').replace('-', ' ') : this.alt;
+
+		        		var currentObj = { src: this.src, alt: tempAlt };
+
+		        		// if both lists are empty and this is the first processed img, set this as the "keystone" img, at position 0 in both lists
+		        		if (!base.catalog[0].length && !base.catalog[1].length && !i) {
+		        			base.catalog[0].push(currentObj);
+			        		base.catalog[1].push(currentObj);
+			        		return null;
+		        		} else {
+		        			return currentObj;
+		        		}
+
+        			}));
+        		}
+
+        		// now that we've gathered all imgs, we can answer the question of which orientation we're using, vertical, horizontal, or both
+        		if (base.catalog[0].length !== 1 && base.catalog[1].length !== 1) base.orientation = -1;
+        		else if (base.catalog[0].length === 1) base.orientation = 1;
+        		else base.orientation = 0;
+
+        		// now lets move on to building
+        		methods.doInitCarpentry();
+        	},
+
+        	doInitCarpentry: function() {
+
+        		// now we build
+
+        		// init the currentFrame info
+	        	base.currentFrame = [0, 0];
+
+	        	// create document fragment object with inner div
+	        	var frag = {
+	        		$inner: $(document.createElement('div')).addClass('pbj-inner')
+	        	};
+
+	        	// build 5 sections to make the dance floor
+	        	var cell = 1;
+	        	while (cell <= 5) {
+	        		// set the plane of the current cell
+	        		var plane = ([2, 4].indexOf(cell) !== -1) ? 1 : 0 ;
+
+	        		// create temp objects with info needed to build the dance floor
+	        		var cellObj = {
+	        				1: methods.nextFrame(plane),
+	        				2: methods.nextFrame(plane),
+	        				3: 0,
+	        				4: 1,
+	        				5: 1
+	        			};
+
+	        		// create img container, append img with appropriate values, then append to inner frag
+	        		frag.$cell = $(document.createElement('section'))
+	        			.addClass('pbj-img-container')
+	        			.append($(document.createElement('img'))
+	        				.attr({
+				        		'class' : 'pbj-img',
+			        			src	: base.catalog[plane][cellObj[cell]].src,
+			        			alt : base.catalog[plane][cellObj[cell]].alt
+		        			}))
+		        		.appendTo(frag.$inner);
+
+		        	// incrment counter
+		        	cell++;
+	        	}
+
+	        	// build temp tap map frag
+	        	frag.$tapMap = $(document.createElement('div')).addClass('pbj-tap-map');
+
+	        	// obj of tapmap info
+	        	var tapMapArr = ['n', 's', 'e', 'w', 'n pbj-tap-n-1', 'n pbj-tap-n-2', 's pbj-tap-s-1', 's pbj-tap-s-2'],
+	        		tapMapObj = {
+	        			0: function() { return tapMapArr.splice(0, 2); },
+	        			1: function() { return tapMapArr.splice(2, 2); },
+	        			'-1': function() { return tapMapArr.splice(2, 6) }
+		        	};
+
+	        	// iterate through each tap target type to build the tap target areas
+        		$.each(tapMapObj[base.orientation](), function(i, val) {
+        			// map semantic directions to shorthand cardinal directions
+        			var dirObj = {
+        				n: 'up',
+        				s: 'down',
+        				e: 'right',
+        				w: 'left'
+        			};
+
+        			// if the first letter of the current value corresponds to a key in dirObj, save that value in the temp dirAdv var
+        			if (dirObj[val[0]]) var advDir = dirObj[val[0]];
+
+					// append the tap target we create to the tap map frag
+	        		frag.$tapMap.append($(document.createElement('a')).attr({
+		        		'class'			: 'pbj-tap pbj-tap-' + val,
+		        		'data-pbj-adv'	: advDir
+		        	})
+		        		// add a visually hidden span to include accessible text describing the tap target link
+		        		.append($(document.createElement('span')).attr({
+			        		'class'	: 'visually-hidden'
+			        	})
+			        		// the accessibility text can be modified in default options
+			        		.text(base.options.accessibleLinkText + ' ' + advDir)
+			        	)
+		        	);
+        		});
+
+	        	// add tap map elements to the end of frag
+				frag.$inner = frag.$inner.add(frag.$tapMap);
+
+	        	// add optional css and finally append frag to living el
+	        	base.$el.css({
+	        		backgroundColor: base.options.backgroundColor,
+	        		borderRadius: base.options.borderRadius,
+	        		borderColor: base.options.borderColor,
+			        borderWidth: base.options.borderSize
+	        	}).html(frag.$inner);
+
+	        	// now that the final structure is in the wild, lets cache some els
+	        	methods.doCacheEls();
+	        },
+
+	        doRegisterEvents: function() {
+	        	events.resize();
+	        	events.click();
+	        },
+
+	        // adaptation of my whenVisible jQuery plugin
  			// http://plugins.jquery.com/whenvisible/
  			whenVisible: function(el, callback) {
 
@@ -131,246 +371,97 @@
 	            if (!isVisible) si = setInterval(check, interval);
  			},
 
-	        doInitScavengry: function() {
-
-	        	// before we build up we must tear down
-
-	        	// loop through the provided img list/s, figure some things out, then hand it off to the processList function
-	        	base.$el.children().each(function() {
-	        		// check to see if we're using section elements or lists, so we know how the user would like us to build this again later
-	        		if (!$(this).is('ul')) base.useSection = true;
-
-	        		if ($(this).hasClass('horizontal') || $(this).data('pbjDirection') === 'horizontal') { // populate the horizontal catalog
-	        			processList('h', this);
-	        		} else { // populate the vertical catalog
-	        			processList('v', this);
-	        		}
-	        	});
-
-	        	// run 1 or more lists through the map function to extract necessary vals and then add to the appropriate catalog
-        		function processList(listPlane, currentList) { // listPlane can be either "h" (horizontal) or "v" (vertical)
-
-        			// init the catalog
-		        	if (typeof base.catalog === 'undefined') base.catalog = {};
-		        	if (typeof base.catalog[listPlane] === 'undefined') base.catalog[listPlane] = [];
-
-		        	// run the list, minus the parent element, through the map function, grabbing the src and alt vals, then dump each img object into the catalog
-		        	base.catalog[listPlane] = base.catalog[listPlane].concat($(currentList).find('img').map(function() {
-
-        				// if the current img lacks an alt property, attempt to add one based on the img filename, which is hopefully semantic enough to make sense
-		        		var tempAlt = (typeof this.alt === 'undefined' || this.alt === '') ? this.src.split('.').slice(-2, -1)[0].split('/').pop().replace('_', ' ').replace('-', ' ') : this.alt;
-
-        				return {
-		        			src: this.src,
-		        			alt: tempAlt
-		        		};
-        			}));
-        		}
-
-        		// now lets move on to building
-        		methods.doInitCarpentry();
-        	},
-
-        	doInitCarpentry: function() {
-
-        		// now we build
-
-	        	// create document fragment  initially populated with either ul or div, depending on if we're using section elements
-	        	var $frag = $(document.createElement((base.useSection) ? 'div' : 'ul'));
-
-	        	// add css width property to "inner" element, 100% x number of carousel items
-	        	$frag.attr({
-        			'class'	: '_pbj-inner',
-        			style	: 'width: ' + base.catalog.h.length * 100 + '%'
-        		});
-
-	        	// iterate through the catalog to build the list items or sections
-	        	$.each(base.catalog.h, function(i, val) {
-	        		var $tempFrag = $(document.createElement((base.useSection) ? 'section' : 'li'));
-		        	// add "container" class to img container, then append img with appropriate values, and append the whole thing back to frag
-		        	$tempFrag.addClass('_pbj-img-container').append($(document.createElement('img')).attr({
-		        		'class'	: '_pbj-img',
-	        			src		: val.src,
-	        			alt 	: val.alt
-		        	})).appendTo($frag);
-				});
-
-	        	// build temp tap map frag
-	        	var tapMapArr = ['n', 's', 'e', 'w', 'n _pbj-tap-n-1', 'n _pbj-tap-n-2', 's _pbj-tap-s-1', 's _pbj-tap-s-2'],
-	        		$tapMap = $(document.createElement('div')).attr({
-	        		'class'	: '_pbj-tap-map'
-	        	});
-
-	        	// iterate through each ap target type to build the tap target areas
-        		$.each(tapMapArr, function(i, val) {
-        			// map semantic directions to shorthand cardinal directions
-        			var dirObj = {
-        				n: 'up',
-        				s: 'down',
-        				e: 'right',
-        				w: 'left'
-        			};
-
-        			if (dirObj[val[0]]) var advDir = dirObj[val[0]];
-
-					// append the tap target we create to the tap map frag
-	        		$tapMap.append($(document.createElement('a')).attr({
-		        		'class'			: '_pbj-tap _pbj-tap-' + val,
-		        		'data-pbj-adv'	: advDir
-		        	})
-		        		// add a visually hidden span to include accessible text describing the tap target link
-		        		.append($(document.createElement('span')).attr({
-			        		'class'	: 'visually-hidden'
-			        	})
-			        		// the accessibility text can be modified in default options
-			        		.text(base.options.accessibleLinkText + ' ' + advDir)
-			        	)
-		        	);
-        		});
-
-	        	// add tap map elements to the end of frag
-				$frag = $frag.add($tapMap);
-
-	        	// add optionally css and finally append frag to living el
-	        	base.$el.css({
-	        		backgroundColor: base.options.backgroundColor,
-	        		borderRadius: base.options.borderRadius,
-	        		borderColor: base.options.borderColor,
-			        borderWidth: base.options.borderSize
-	        	}).html($frag);
-
-	        	// now that the final structure is in the wild, lets cache some els
-	        	methods.doCacheEls();
-	        },
-
-	        doRegisterEvents: function() {
-	        	// on throttled window resize load layout figurer outer function
-	        	$(window).on('resize', methods.throttle(methods.doLayoutParams, 100));
-
-	        	// load tap target click function
-	        	base.$tapTarget.on('click', function(e) {
-	        		e.preventDefault();
-	        		e.stopImmediatePropagation();
-	        		methods.doSlide($(this).data('pbjAdv'));
-	        	});
-	        },
-
 	        // do maths to assign necessary parameters (width, height, skew deg) to componenets (viewport, tap panels)
-	        doLayoutParams: function() {
+	        doLayoutInitSize: function() {
 
-				// grab the width from the viewport el, but subtract the borders
-	        	base.width = base.$el.width() - (base.options.borderSize * 2);
+				position.width();
 
-				// set the width attribute for all imgs, to help ease the rendering burden on mobile devices
-				base.$imgs.attr({
-					width: base.width
+				base.$imgs.each(function () {
+					methods.whenVisible($(this), position.imgLoad);
 				});
 
-				// if the imgs take a second to load the inner el height will remain at 0. we'll have to twiddle our thumbs for a bit.
-				methods.whenVisible(base.$inner, function(el) {
-					// the images have scaled, resetting the height. grab the new value from the inner el
-					base.height = $(el).height();
+			},
 
-					// handle image placement for images that are different sizes
-					var doImagePlacement = {
-						alignTop: function() {	/* this is default browser behavior; do nothing */	},
-						alignBottom: function () {
-							base.$imgs.each(function() {
-								methods.whenVisible(this, function(el) {
-									$(el).css('top', base.height - $(el).height());
-								});
+			// on resize do some stuff
+			doLayoutResize: function() {
+				position.width();
+				position.height();
+    			position.tapMap();
+			},
+
+			/*
+			// if the imgs take a second to load the inner el height will remain at 0. we'll have to twiddle our thumbs for a bit.
+			methods.whenVisible(base.$inner, function(el) {
+				// the images have scaled, resetting the height. grab the new value from the inner el
+				base.height = $(el).height();
+
+				// handle image placement for images that are different sizes
+				var doImagePlacement = {
+					alignTop: function() {}, //this is default browser behavior; do nothing
+					alignBottom: function () {
+						base.$imgs.each(function() {
+							methods.whenVisible(this, function(el) {
+								$(el).css('top', base.height - $(el).height());
 							});
-						},
-						alignMiddle: function () {
-							base.$imgs.each(function() {
-								methods.whenVisible(this, function(el) {
-									$(el).css('top', (base.height - $(el).height()) / 2);
-								});
+						});
+					},
+					alignMiddle: function () {
+						base.$imgs.each(function() {
+							methods.whenVisible(this, function(el) {
+								$(el).css('top', (base.height - $(el).height()) / 2);
 							});
-						},
-						stretch: function () {
-							base.$imgs.attr({
-								height: base.height - (base.options.borderSize * 2)
-							});
-						}
+						});
+					},
+					stretch: function () {
+						base.$imgs.attr({
+							height: base.height - (base.options.borderSize * 2)
+						});
 					}
+				}
 
-					// run the chosen image placement method
-					doImagePlacement[base.options.imagePlacement]();
-
-		        	// in order to create shaped "tap" (click) targets we must do some maths
-		        	// imagine drawing 2 diagonal lines, 1 from the top left to the bottom right corner, the other from the top right to bottom left corner
-		        	//
-		        	// +------+
-		        	// |\  n /|
-		        	// | \  / |
-		        	// |  \/  |
-		        	// |w /\ e|
-		        	// | /  \ |
-		        	// |/  s \|
-		        	// +------+
-		        	//
-		        	// we shape the north/top/up and south/bottom/down sections and overlay them on the rectangular east/right, west/left sections
-		        	// to find the necessary skew angle for the north and south elements we use the folliwng equation:
-		        	// sin A = opp/hyp
-		        	// the opposite side is a, the current height of el
-		        	// the hypotenuse can be solved using the Pythagorean theorem. as stated immediately above, side a is the current height of el and side b, the current width of el
-		        	// js Math methods spit out radians, so we'll need to convert that to degrees (actually we could totally use radians but it's Greek to me)
-					var skewAngle = Math.asin(base.height/Math.sqrt(Math.pow(base.width, 2) + Math.pow(base.height, 2))) * (180 / Math.PI);
-
-					// set the special skewed click targets to use the determined angle
-					base.$skewPos.css(methods.prefixr('transform', 'skewY(' + skewAngle + 'deg)')).addClass('shaped');
-					base.$skewNeg.css(methods.prefixr('transform', 'skewY(' + (skewAngle * -1) + 'deg)')).addClass('shaped');
-				});
-	        },
+				// run the chosen image placement method
+				doImagePlacement[base.options.imagePlacement]();
+			});
+			*/
 
 	        // advance the frame in the indicated directiom
 	        doSlide: function(advDir) {
 
-	        	// create a var to store the plane of movement, "h" or "v"
-	        	var framePlane;
+	        	// create a var to store the plane of movement, 0 or 1
+	        	var plane = (['left', 'right'].indexOf(advDir) !== -1) ? 1 : 0 ,
+	        		increment = (['right', 'down'].indexOf(advDir) !== -1) ? true : false ;
 
-	        	// init the currentFrame info
-	        	if (typeof base.currentFrame === 'undefined') base.currentFrame = {
-	        		h: 0,
-	        		v: 0
-	        	};
+	        	// save the new current frame
+				methods.nextFrame(plane, increment, true);
 
-	        	// increment/decrement the current slide accordingly
-	        	switch (advDir) {
-					case 'up':
-						framePlane = 'v';
-						decrement();
-					break;
-					case 'down':
-						framePlane = 'v';
-						increment();
-					break;
-					case 'left':
-						framePlane = 'h';
-						decrement();
-					break;
-					case 'right':
-						framePlane = 'h';
-						increment();
-					break;
-				}
+				// "translate" the inner el, aka move the dance floor to the new position
+	        	base.$inner.addClass('pbj-move-' + advDir);
 
-				function increment() {
-					base.currentFrame[framePlane]++;
-					if (base.currentFrame[framePlane] === base.catalog[framePlane].length) base.currentFrame[framePlane] = 0;
-				}
+				var t = setTimeout(function() {
+					base.$centerImg.attr({
+	        			src	: base.catalog[plane][base.currentFrame[plane]].src,
+	        			alt : base.catalog[plane][base.currentFrame[plane]].alt
+        			});
 
-				function decrement() {
-					base.currentFrame[framePlane]--;
-					if (base.currentFrame[framePlane] < 0) base.currentFrame[framePlane] = base.catalog[framePlane].length - 1;
-				}
+					methods.whenVisible(base.$centerImg, function() {
+						base.$inner.removeClass('pbj-move-up pbj-move-down pbj-move-left pbj-move-right').find('.pbj-img').each(function(i, el) {
+							// don't touch the center img
+							if (i === 2) return null;
 
-				_(base.currentFrame);
+							var plane = ([1, 3].indexOf(i) !== -1) ? 1 : 0 ,
+				        		increment = ([3, 4].indexOf(i) !== -1) ? true : false ;
 
-				// "translate" the inner el, aka move the dance floor to the new position, calculated by dividing the current position by the number of frames, then multiplying by -100
-	        	//base.$inner.css(methods.prefixr('transform', 'translate3d(' + ((base.currentFrame[framePlane] / base.catalog[framePlane].length) * -100) + ', 0, 0)'));
-	        	base.$inner.css(methods.prefixr('transform', 'translate3d(' + ((base.currentFrame[framePlane] / base.catalog[framePlane].length) * -100) + '%, 0, 0)'));
+							$(this).attr({
+								src	: base.catalog[plane][methods.nextFrame(plane, increment)].src,
+			        			alt : base.catalog[plane][methods.nextFrame(plane, increment)].alt
+							});
+						});
+
+						// once everything's loaded, re-attach the click handler
+						events.click();
+					});
+				}, base.options.transitionDuration);
+
 	        }
         };
 
@@ -384,7 +475,8 @@
         borderSize: 3,
         borderRadius: 4,
         accessibleLinkText: 'advance to next frame',
-        imagePlacement: 'stretch' // options: "alignTop", "alignBottom", "alignMiddle", "stretch"
+        imagePlacement: 'stretch', // options: "alignTop", "alignBottom", "alignMiddle", "stretch"
+        transitionDuration: 1000
     };
 
     $.fn[pluginName] = function(options) {

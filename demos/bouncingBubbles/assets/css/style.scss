@@ -1,0 +1,196 @@
+/* ==========================================================================
+   my custom styles
+   ========================================================================== */
+
+// mixins
+
+@mixin prefix($rule, $val) {
+	@each $browser in -webkit-, -moz-, -ms-, -o-, "" {
+		#{$browser}#{$rule}: $val;
+	}
+}
+
+@mixin visually-hidden {
+	position: absolute !important;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px,1px,1px,1px);
+    padding: 0 !important;
+    border: 0 !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden;
+}
+
+@mixin visually-hidden-text {
+	text-indent: -5000px;
+}
+
+// /mixins
+
+// color variables
+
+$dark: #000;
+$light: #fff;
+
+$opacity: 0.5;
+
+// /color variables
+
+// size variables
+
+$rings: 20;
+
+// /size variables
+
+/* import animation keyframes */
+
+@import "keyframes";
+
+/* /import animation keyframes */
+
+/* helper styles */
+
+.visually-hidden {
+    @include visually-hidden;
+}
+
+.relative-container {
+    position: relative;
+}
+
+/* /helper styles */
+
+/* general page styles */
+
+html {
+	background-color: $light;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	-webkit-font-smoothing: antialiased;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-weight: 300;
+	color: rgb(245, 245, 245);
+	text-align: center;
+}
+
+a {
+	font-weight: bold;
+	text-decoration: none;
+	color: rgb(235, 235, 235);
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.nozzle {
+	position: absolute;
+	width: 270px;
+	height: 46px;
+	border-style: solid;
+	border-color: #000;
+	border-width: 0 0 1px 0;
+	left: 50%;
+	background-color: #fff;
+
+	@include prefix(transform, translate3d(-50%, 0, 0));
+
+	&:before,
+	&:after {
+		content: "";
+		position: absolute;
+		width: 15px;
+		height: 50px;
+		left: 0;
+		top: -4px;
+		border-style: solid;
+		border-color: #000;
+		border-width: 0 0 0 1px;
+		background-color: #fff;
+
+		@include prefix(transform-origin, bottom left);
+		@include prefix(transform, rotate(-20deg));
+	}
+
+	&:after {
+		left: 254px;
+		border-width: 0 1px 0 0;
+
+		@include prefix(transform-origin, bottom right);
+		@include prefix(transform, rotate(20deg));
+	}
+}
+
+.nozzle-wall {
+	position: absolute;
+	width: 1px;
+	height: 46px;
+	right: 0;
+
+	&.nozzle-wall-right {
+		right: inherit;
+		left: 0;
+	}
+}
+
+.circle {
+	position: absolute;
+	display: inline-block;
+	left: 50%;
+
+	z-index: -1;
+
+	background-image: url(../images/circle_500.png);
+	background-position: center;
+	border-radius: 50%;
+
+	cursor: pointer;
+	cursor: hand;
+	cursor: -moz-grab;
+	cursor: -webkit-grab;
+	cursor: grab;
+
+	@include visually-hidden-text;
+
+	@include prefix(transition, background-color 200ms ease-in-out);
+
+	@include prefix(animation, slide-in-top 500ms ease-in-out);
+
+	&.bodysnatcher {
+		@include prefix(animation, none);
+	}
+
+	&:hover {
+		text-decoration: none;
+	}
+
+	&.petrified {
+		background-color: #000;
+		cursor: default;
+	}
+}
+
+/* dev */
+
+
+
+/* /dev */
+
+/* /general page styles */
+
+/* responsive media queries */
+
+@media (min-width: 1025px) { /* if larger than typical tablet display, aka desktop styles */
+
+
+
+}
+
+@media (max-width: 480px) { /* if smaller or equal to typical phone display, aka phone styles */
+
+
+
+}
