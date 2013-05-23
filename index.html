@@ -107,13 +107,18 @@
 
         <script>
 
-			var docFrag = '',
-				directoryArr = [
+			var directoryArr = [
 	        		{
 	        			name: '8ball',
 	        			link: 'http://8ball.beautifuluniquesnowflake.com/',
 	        			size: '',
 	        			desc: 'virtual magic 8 ball'
+	        		},
+	        		{
+	        			name: 'bouncingBubbles',
+	        			link: 'http://bouncingbubbles.beautifuluniquesnowflake.com/',
+	        			size: '',
+	        			desc: 'interactive bouncing bubbles'
 	        		},
 	        		{
 	        			name: 'ConsultantCalc',
@@ -141,42 +146,45 @@
 	        		},
 	        		{
 	        			name: 'README.md',
-	        			link: 'http://www.beautifuluniquesnowflake.com/README.md',
+	        			link: 'http://www.beautifuluniquesnowflake.com/listing/README.md',
 	        			size: '158 bytes',
 	        			desc: '',
 	        			file: true
 	        		}
-	        	];
+	        	],
+	        	$frag = $(document.createElement('tbody'));
 
 			$.each(directoryArr, function (index, item) {
-				docFrag += '<tr><td class="name"><a ';
-				if (item.file === true) docFrag += 'class="file" ';
-				docFrag += 'href="' + item.link + '"><span>' + item.name + '</span></a></td><td class="size">';
-				if (item.size !== '') {
-					docFrag += item.size;
-				} else {
-					docFrag += '&nbsp;&ndash;';
-				}
-				docFrag += '</td><td class="description">';
-				if (item.desc !== '') {
-					docFrag += item.desc;
-				} else {
-					docFrag += '&nbsp;';
-				}
-				docFrag += '</td></tr>';
+				var $tempFrag = $(document.createElement('tr'));
+
+				$tempFrag.append($(document.createElement('td')).addClass('name')
+					 .append($(document.createElement('a'))));
+
+				if (item.file === true) $tempFrag.find('a').addClass('file');
+
+				$tempFrag.find('a').attr({ href: item.link })
+					.append($(document.createElement('span'))
+						.text(item.name));
+
+				$tempFrag.append($(document.createElement('td')).addClass('size').html(item.size || '&nbsp;&ndash;&nbsp;'));
+
+				$tempFrag.append($(document.createElement('td')).addClass('description').html(item.desc || '&nbsp;'));
+
+				$frag.append($tempFrag);
 			});
 
+			$frag.append($(document.createElement('tr')).addClass('divider')
+				.append($(document.createElement('th')).attr({ colspan: 3 })
+					 .append($(document.createElement('hr')))));
+
 			$(document).ready(function() {
-				$('tbody').prepend(docFrag);
+				$('table').append($frag);
 			});
 
         </script>
 
 	</head>
     <body>
-        <!--[if lt IE 9]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
 
 		<h1>Index of <a href="/">/</a></h1>
 
@@ -194,13 +202,6 @@
 				</tr>
 			</thead>
 			<tfoot></tfoot>
-			<tbody>
-				<tr class="divider">
-					<th colspan="3">
-						<hr>
-					</th>
-				</tr>
-			</tbody>
 		</table>
 
 		<footer>
@@ -210,10 +211,14 @@
 					<a href="http://twitter.com/briznad/">@briznad</a>
 				</li>
 				<li>
-					<a href="http://www.beautifuluniquesnowflake.com/README.md">About</a>
+					<a href="README.md">About</a>
 				</li>
 			</ul>
 		</footer>
+
+		<!--[if lt IE 9]>
+            <p class="chromeframe" style="position: fixed; width: 100%; top: 0; margin: 0; padding: 15px; text-align: center; background-color: #555;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
 
         <script>
             var _gaq=[['_setAccount','UA-36834242-1'],['_setDomainName', 'beautifuluniquesnowflake.com'],['_trackPageview']];
